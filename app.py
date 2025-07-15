@@ -48,10 +48,10 @@ product_df = None
 if product_file:
     product_df = pd.read_excel(product_file)
 
-    # Dynamically find valid groupable columns
-    groupable_columns = product_df.select_dtypes(include='object').columns.tolist()
-    exclude_cols = ['UNITSVARIABLE', 'DOLLARSVARIABLE', 'Product Name']
-    groupable_columns = [col for col in groupable_columns if col not in exclude_cols]
+    # Dynamically find valid groupable columns (starting at 5th column)
+    # Assumes first 4 columns are: ImageID, UNITSVARIABLE, DOLLARSVARIABLE, and a product name or description
+    groupable_columns = product_df.columns[4:].tolist()
+
 
     if groupable_columns:
         group_option = st.selectbox("🔀 Group products by:", options=groupable_columns)

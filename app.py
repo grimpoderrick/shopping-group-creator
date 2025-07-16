@@ -68,7 +68,7 @@ if product_file:
     # Dynamically find valid groupable columns (starting at 5th column)
     # Assumes first 4 columns are: ImageID, UNITSVARIABLE, DOLLARSVARIABLE, and a product name or description
     # Select groupable columns (starting after the 4th column)
-    groupable_columns = product_df.columns[3:]
+    groupable_columns = product_df.columns[4:]
 
 
 

@@ -48,12 +48,31 @@ product_df = None
 if product_file:
     product_df = pd.read_excel(product_file)
 
+    # Normalize column names: lowercase, no spaces or underscores
+    product_df.columns = (
+    product_df.columns
+        .str.strip()
+        .str.lower()
+        .str.replace(" ", "")
+        .str.replace("_", "")
+                          )
+    # Check for required columns
+    required_cols = ['imageid', 'unitsvariable', 'dollarsvariable']
+    missing_cols = [col for col in required_cols if col not in product_df.columns]
+
+    if missing_cols:
+        st.error(f"Missing required column(s): {', '.join(missing_cols)}. Please check your product coding file.")
+        st.stop()
+
+
     # Dynamically find valid groupable columns (starting at 5th column)
     # Assumes first 4 columns are: ImageID, UNITSVARIABLE, DOLLARSVARIABLE, and a product name or description
-    groupable_columns = product_df.columns[4:].tolist()
+    # Select groupable columns (starting after the 4th column)
+    groupable_columns = product_df.columns[3:]
 
 
-    if groupable_columns:
+
+    if groupable_columns.any():
         group_option = st.selectbox("🔀 Group products by:", options=groupable_columns)
     else:
         st.warning("⚠️ No valid columns found to group by.")

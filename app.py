@@ -49,26 +49,33 @@ if product_file:
     product_df = pd.read_excel(product_file)
 
     # Normalize column names: lowercase, no spaces or underscores
-    product_df.columns = (
+    # Normalize column names
+product_df.columns = (
     product_df.columns
         .str.strip()
         .str.lower()
         .str.replace(" ", "")
         .str.replace("_", "")
-                          )
-    # Check for required columns
-    required_cols = ['imageid', 'unitsvariable', 'dollarsvariable']
-    missing_cols = [col for col in required_cols if col not in product_df.columns]
+)
 
-    if missing_cols:
-        st.error(f"Missing required column(s): {', '.join(missing_cols)}. Please check your product coding file.")
-        st.stop()
+# Auto-detect key columns based on position and content
+col1, col2, col3 = product_df.columns[:3]
 
+if "id" not in col1:
+    st.error(f"Expected product ID in first column (found '{col1}'). Must include 'id'.")
+    st.stop()
 
-    # Dynamically find valid groupable columns (starting at 5th column)
-    # Assumes first 4 columns are: ImageID, UNITSVARIABLE, DOLLARSVARIABLE, and a product name or description
-    # Select groupable columns (starting after the 4th column)
-    groupable_columns = product_df.columns[4:]
+if "unit" not in col2:
+    st.error(f"Expected units variable in second column (found '{col2}'). Must include 'unit'.")
+    st.stop()
+
+if "dollar" not in col3:
+    st.error(f"Expected dollars variable in third column (found '{col3}'). Must include 'dollar'.")
+    st.stop()
+
+# Dynamically find valid groupable columns (anything after the first 4)
+groupable_columns = product_df.columns[4:]
+
 
 
 

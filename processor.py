@@ -45,4 +45,4 @@ def process_files(product_df, purchase_df, group_field='Category'):
     summary = pd.merge(units_agg, dollars_agg, on=['uuid', group_field.lower()], how='outer').fillna(0)
     pivot = summary.pivot(index='uuid', columns=group_field.lower(), values=['Units', 'Dollars'])
     pivot.columns = [f"{metric}_{label}" for metric, label in pivot.columns]
-    return pivot.reset_index()"
+    return pivot.reset_index()

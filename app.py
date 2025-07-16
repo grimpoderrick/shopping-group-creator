@@ -10,8 +10,7 @@ from PIL import Image
 logo = Image.open("logo.png")
 st.image(logo, width=400)  # Adjust width as needed
 
-
-st.title("🛍️ Shopping Group Creator")
+st.title("🏍️ Shopping Group Creator")
 st.markdown("""
 Upload your **Product Coding** and **Shopping Data** files below.  
 Then choose how you'd like to group the results — by any attribute available in the product file (e.g., Category, Subcategory, Brand).
@@ -38,7 +37,6 @@ with col2:
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
 
-
 # Upload product coding file first
 product_file = st.file_uploader("📦 Upload Product Coding File (.xlsx)", type="xlsx")
 
@@ -49,35 +47,31 @@ if product_file:
     product_df = pd.read_excel(product_file)
 
     # Normalize column names: lowercase, no spaces or underscores
-    # Normalize column names
-product_df.columns = (
-    product_df.columns
-        .str.strip()
-        .str.lower()
-        .str.replace(" ", "")
-        .str.replace("_", "")
-)
+    product_df.columns = (
+        product_df.columns
+            .str.strip()
+            .str.lower()
+            .str.replace(" ", "")
+            .str.replace("_", "")
+    )
 
-# Auto-detect key columns based on position and content
-col1, col2, col3 = product_df.columns[:3]
+    # Auto-detect key columns based on position and content
+    col1, col2, col3 = product_df.columns[:3]
 
-if "id" not in col1:
-    st.error(f"Expected product ID in first column (found '{col1}'). Must include 'id'.")
-    st.stop()
+    if "id" not in col1:
+        st.error(f"Expected product ID in first column (found '{col1}'). Must include 'id'.")
+        st.stop()
 
-if "unit" not in col2:
-    st.error(f"Expected units variable in second column (found '{col2}'). Must include 'unit'.")
-    st.stop()
+    if "unit" not in col2:
+        st.error(f"Expected units variable in second column (found '{col2}'). Must include 'unit'.")
+        st.stop()
 
-if "dollar" not in col3:
-    st.error(f"Expected dollars variable in third column (found '{col3}'). Must include 'dollar'.")
-    st.stop()
+    if "dollar" not in col3:
+        st.error(f"Expected dollars variable in third column (found '{col3}'). Must include 'dollar'.")
+        st.stop()
 
-# Dynamically find valid groupable columns (anything after the first 4)
-groupable_columns = product_df.columns[4:]
-
-
-
+    # Dynamically find valid groupable columns (anything after the first 4)
+    groupable_columns = product_df.columns[4:]
 
     if groupable_columns.any():
         group_option = st.selectbox("🔀 Group products by:", options=groupable_columns)
@@ -100,7 +94,7 @@ if product_file and purchase_file and group_option:
         # Download as CSV
         csv = result.to_csv(index=False).encode('utf-8')
         st.download_button(
-            "📥 Download CSV",
+            "📅 Download CSV",
             csv,
             file_name=f"shopping_summary_{group_option}.csv",
             mime="text/csv"
